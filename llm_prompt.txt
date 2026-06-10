@@ -81,39 +81,41 @@
 # 출력 YAML 스키마
 반드시 다음 최상위 키를 사용할 것.
 
-schema_version: "1.0"
+schema_version: '1.0'
 
 deck:
-    output_name: "논문 제목을 파일명으로 쓰기 좋은 snake_case 또는 kebab-case"
-    language: "ko"
-    eod_title: "EOD"
+    output_name: paper_title_in_filename_style
+    language: ko
+    eod_title: EOD
 
 cover:
-    title: "Paper Title in English"
-    subtitle: "Conference or Journal Year [link]"
-    date: "발표일 또는 작성일"
-    venue: "RS Team Seminar"
+    title: Paper Title in English
+    subtitle: Conference or Journal Year [link]
+    date: 발표일 또는 작성일
+    venue: RS Team Seminar
 
 sections:
-    - id: "sec_..."
-      title: "Section Title in English"
+    - id: sec_...
+      title: Section Title in English
       contents:
-          - "main에 존재하는 슬라이드 id"
+          - main에 존재하는 슬라이드 id
 
 main:
-    - id: "슬라이드 id"
-      title: "Slide Title in English"
+    - id: slide_id
+      title: Slide Title in English
       body: |
           슬라이드 본문 1줄임.
           슬라이드 본문 2줄임.
           슬라이드 본문 3줄임.
 
 # 필드 작성 규칙
-- YAML 문자열을 감쌀 때는 스마트 큰따옴표(U+201C, U+201D)를 쓰지 말고 ASCII 큰따옴표(U+0022) `"`를 사용할 것.
-- `schema_version`은 항상 `"1.0"`으로 둘 것.
+- 스마트 큰따옴표(U+201C, U+201D)는 물론 ASCII 큰따옴표(U+0022)도 사용하지 말 것.
+- YAML 문자열은 가능한 한 따옴표 없는 plain scalar로 작성할 것.
+- YAML 문법상 따옴표가 꼭 필요한 경우에만 작은따옴표를 사용할 것.
+- `schema_version`은 항상 작은따옴표로 감싼 `1.0`으로 둘 것.
 - `deck.output_name`은 영문 소문자, 숫자, `_` 또는 `-` 위주로 작성할 것.
-- `deck.language`는 항상 `"ko"`로 둘 것.
-- `deck.eod_title`은 특별한 이유가 없으면 `"EOD"`로 둘 것.
+- `deck.language`는 항상 `ko`로 둘 것.
+- `deck.eod_title`은 특별한 이유가 없으면 `EOD`로 둘 것.
 - 모든 title 필드는 영어로 작성할 것.
 - `cover.title`, `sections[*].title`, `main[*].title`은 반드시 영어로 작성할 것.
 - `body` 본문은 기존 지침대로 한국어 세미나 초안 문체를 사용할 것.
@@ -121,7 +123,7 @@ main:
 - `cover.subtitle`은 가능한 경우 `학회명 연도 [link]` 형식으로 영어 또는 공식 약어를 사용해 작성할 것.
 - 링크를 확인할 수 없으면 `[link]` 자리에는 PDF에서 확인 가능한 DOI, arXiv, URL을 넣거나 생략 가능함.
 - `cover.date`는 입력에서 발표일을 명시하지 않으면 현재 날짜 또는 빈 문자열 대신 자연스러운 작성일을 사용할 것.
-- `cover.venue`는 기본적으로 `"RS Team Seminar"`를 사용할 것.
+- `cover.venue`는 기본적으로 `RS Team Seminar`를 사용할 것.
 
 # 섹션 설계 가이드
 아래는 가능한 섹션 예시이며, 반드시 모두 사용할 필요는 없음.
@@ -172,13 +174,14 @@ main:
 - 발표자료 본문에는 LaTeX이 최대한 적게 들어가도록 할 것.
 - 표나 그림을 설명할 때는 `Figure 2는 ...를 보여줌`, `Table 1에서는 ...가 확인됨`처럼 출처를 자연스럽게 포함할 것.
 - PDF에 그림 번호나 표 번호가 명확하지 않으면 번호를 만들지 말 것.
-- 본문에서 인용부호가 필요한 경우에도 스마트 큰따옴표 대신 ASCII 큰따옴표 `"`를 사용할 것.
+- 본문에서 인용부호가 필요한 경우에도 큰따옴표를 사용하지 말 것.
+- 인용부호가 꼭 필요하면 작은따옴표를 사용할 것.
 
 # 금지 사항
 - `body` 안에서 YAML 리스트를 사용하지 말 것.
 - `body` 안에서 Markdown bullet을 사용하지 말 것.
 - `body` 안에서 번호 매기기 목록을 사용하지 말 것.
-- 스마트 큰따옴표(U+201C, U+201D)를 사용하지 말 것.
+- 스마트 큰따옴표(U+201C, U+201D)와 ASCII 큰따옴표(U+0022)를 모두 사용하지 말 것.
 - 논문 내용을 그대로 길게 번역하지 말 것.
 - abstract만 보고 전체를 작성하지 말 것.
 - 모든 논문에 동일한 `example.yaml` 슬라이드 구성을 복사하지 말 것.
@@ -202,7 +205,7 @@ main:
 - 참조되지 않는 `main` 슬라이드가 없음.
 - `body` 내부에 `-`, `*`, `•`, `1.`, `2.` 같은 목록 기호가 없음.
 - `body`가 모두 `body: |` 형식임.
-- 스마트 큰따옴표가 없고 ASCII 큰따옴표 `"`만 사용됨.
+- 스마트 큰따옴표와 ASCII 큰따옴표가 모두 없음.
 - `cover.title`, `sections[*].title`, `main[*].title`이 모두 영어로 작성됨.
 - 슬라이드 구성이 논문별 내용에 맞게 동적으로 조정됨.
 - 출력에 YAML 외의 텍스트가 없음.
