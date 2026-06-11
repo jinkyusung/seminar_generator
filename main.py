@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 from pathlib import Path
 from typing import Any, Iterable
@@ -19,7 +18,7 @@ DEFAULT_EOD_TITLE = "EOD"
 
 
 class ConfigError(ValueError):
-    """Raised when the YAML input or PPTX template structure is invalid."""
+    """Raised when the YAML input or PPTX generation setup is invalid."""
 
 
 # Tags related to bullet formatting in DrawingML paragraph properties.
@@ -459,38 +458,6 @@ def fill_main(slide: Any, item: dict[str, Any], *, enable_bullets: bool = False)
     render_body(find_body_shape(slide), item["body"], enable_bullets=enable_bullets)
 
 
-def inspect_template(template_path: Path) -> None:
-    if not template_path.exists():
-        raise FileNotFoundError(f"Template file not found: {template_path}")
-
-    prs = Presentation(str(template_path))
-    payload: list[dict[str, Any]] = []
-    for slide_no, slide in enumerate(prs.slides, start=1):
-        slide_info: dict[str, Any] = {
-            "slide_no": slide_no,
-            "layout_name": slide.slide_layout.name,
-            "shapes": [],
-        }
-        for shape in slide.shapes:
-            shape_info: dict[str, Any] = {
-                "name": shape.name,
-                "has_text_frame": bool(getattr(shape, "has_text_frame", False)),
-                "left": int(shape.left),
-                "top": int(shape.top),
-                "width": int(shape.width),
-                "height": int(shape.height),
-            }
-            if getattr(shape, "is_placeholder", False):
-                try:
-                    shape_info["placeholder_idx"] = int(shape.placeholder_format.idx)
-                    shape_info["placeholder_type"] = str(shape.placeholder_format.type)
-                except ValueError:
-                    pass
-            slide_info["shapes"].append(shape_info)
-        payload.append(slide_info)
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
-
-
 def build_presentation(config: dict[str, Any], template_path: Path, output_path: Path) -> Path:
     if not template_path.exists():
         raise FileNotFoundError(f"Template file not found: {template_path}")
@@ -538,12 +505,12 @@ def resolve_output_path(args: argparse.Namespace, config: dict[str, Any]) -> Pat
         output_name = "rs_seminar"
     return DEFAULT_OUTPUT_DIR / f"{slugify(output_name)}.pptx"
 
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Fill the RS seminar PPTX template from YAML.")
-    parser.add_argument("--config", type=Path, help="YAML input file, e.g. config/target_example.yaml")
+    parser.add_argument("--config", type=Path, required=True, help="YAML input file, e.g. config/target_example.yaml")
     parser.add_argument("--template", type=Path, default=DEFAULT_TEMPLATE, help="PPTX template path")
     parser.add_argument("--out", type=Path, help="Output PPTX path")
-    parser.add_argument("--inspect-template", action="store_true", help="Print template slides/placeholders and exit")
     return parser.parse_args()
 
 
@@ -551,13 +518,6 @@ def main() -> None:
     args = parse_args()
 
     try:
-        if args.inspect_template:
-            inspect_template(args.template)
-            return
-
-        if not args.config:
-            raise ConfigError("--config is required unless --inspect-template is used.")
-
         raw_config = load_yaml(args.config)
         config = normalize_config(raw_config)
         output_path = resolve_output_path(args, config)
