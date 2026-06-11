@@ -7,6 +7,8 @@
 1. LLM에 `llm_prompt.txt`, `config/example.yaml`, 논문 PDF를 함께 입력해 논문별 YAML 설정 파일을 생성함.
 2. 생성된 YAML을 `main.py`에 입력해 PowerPoint 발표자료를 생성함.
 
+즉, LLM의 역할은 논문 내용을 발표자료 구조에 맞는 YAML 파일로 정리하는 것이며, `main.py`는 생성된 YAML 파일을 PowerPoint 템플릿에 대응시켜 PPTX를 만드는 역할만 담당합니다.
+
 ---
 
 ## 1. 설치
@@ -38,7 +40,7 @@ config/example.yaml
 
 아래 예시처럼 논문 PDF, `llm_prompt.txt`, `config/example.yaml`을 함께 첨부한 뒤, 출력 YAML을 파일로 반환하도록 요청합니다.
 
-![LLM에 논문 PDF, 프롬프트, 예시 YAML을 첨부해 YAML 파일 생성을 요청하는 예시](asset/example.png)
+<img src="asset/example.png" alt="LLM에 논문 PDF, 프롬프트, 예시 YAML을 첨부해 YAML 파일 생성을 요청하는 예시" width="512">
 
 예를 들어 `SimRec.pdf` 논문을 처리한다면 `simrec.yaml`처럼 논문을 식별할 수 있는 이름으로 YAML 파일을 받습니다. LLM에는 `llm_prompt.txt`의 지시를 따르게 하고, 최종 출력으로 YAML 본문만 생성하게 합니다.
 
@@ -50,7 +52,7 @@ config/example.yaml
 config/attention_is_all_you_need.yaml
 ```
 
-YAML은 반드시 다음 구조를 가져야 합니다.
+`llm_prompt.txt`는 LLM이 다음과 같은 YAML 구조를 생성하도록 설계되어 있습니다.
 
 ```yaml
 schema_version: "1.0"
@@ -81,13 +83,14 @@ main:
           이 논문은 attention만으로 sequence transduction을 처리하는 구조를 제안함.
 ```
 
-주의할 점은 다음과 같습니다.
-
-- `sections[*].contents`에 적은 id는 반드시 `main[*].id`에 존재해야 함.
-- `main`에 있는 모든 슬라이드는 반드시 어떤 section에서 참조되어야 함.
-- `body`는 `body: |` 형식의 일반 텍스트로 작성해야 함.
-- `body` 안에서는 bullet point나 번호 목록을 사용하지 않아야 함.
-- 논문마다 슬라이드 수와 섹션 구성은 달라질 수 있음.
+> [!NOTE]
+> `llm_prompt.txt`는 LLM이 위 YAML 구조와 아래 제약 조건을 만족하는 결과를 생성하도록 설계되어 있습니다.
+>
+> - `sections[*].contents`에 적은 id는 반드시 `main[*].id`에 존재해야 함.
+> - `main`에 있는 모든 슬라이드는 반드시 어떤 section에서 참조되어야 함.
+> - `body`는 `body: |` 형식의 일반 텍스트로 작성해야 함.
+> - `body` 안에서는 bullet point나 번호 목록을 사용하지 않아야 함.
+> - 논문마다 슬라이드 수와 섹션 구성은 달라질 수 있음.
 
 ---
 
