@@ -556,7 +556,7 @@ def main() -> None:
             return
 
         if not args.config:
-            raise ConfigError("--yaml is required unless --inspect-template is used.")
+            raise ConfigError("--config is required unless --inspect-template is used.")
 
         raw_config = load_yaml(args.config)
         config = normalize_config(raw_config)
