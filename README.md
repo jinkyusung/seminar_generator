@@ -36,7 +36,11 @@ config/example.yaml
 논문 PDF
 ```
 
-LLM에는 `llm_prompt.txt`의 지시를 따르게 하고, 최종 출력으로 YAML 본문만 생성하게 합니다.
+아래 예시처럼 논문 PDF, `llm_prompt.txt`, `config/example.yaml`을 함께 첨부한 뒤, 출력 YAML을 파일로 반환하도록 요청합니다.
+
+![LLM에 논문 PDF, 프롬프트, 예시 YAML을 첨부해 YAML 파일 생성을 요청하는 예시](asset/example.png)
+
+예를 들어 `SimRec.pdf` 논문을 처리한다면 `simrec.yaml`처럼 논문을 식별할 수 있는 이름으로 YAML 파일을 받습니다. LLM에는 `llm_prompt.txt`의 지시를 따르게 하고, 최종 출력으로 YAML 본문만 생성하게 합니다.
 
 생성된 YAML은 `config/` 아래에 저장합니다.
 
@@ -156,23 +160,7 @@ python main.py --config config/attention_is_all_you_need.yaml --template "RS 세
 
 ---
 
-## 7. 템플릿 구조 확인
-
-템플릿의 placeholder 정보를 확인하려면 다음을 실행합니다.
-
-```bash
-python main.py --inspect-template
-```
-
-특정 템플릿을 확인하려면 다음처럼 실행합니다.
-
-```bash
-python main.py --inspect-template --template "RS 세미나 템플릿.pptx"
-```
-
----
-
-## 8. 전체 워크플로우 요약
+## 7. 전체 워크플로우 요약
 
 ```text
 논문 PDF 준비
